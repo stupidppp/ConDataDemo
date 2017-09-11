@@ -113,4 +113,19 @@ public class Pool {
             }
         }
     }
+
+    public synchronized  void cleanConPool() throws SQLException {
+        if ( this.conPool == null) {
+            return;
+        }
+
+        for (int i=0; i< this.conPool.size(); i++){
+            DbCon  c  = this.conPool.get(i);
+            c.close();
+            this.conPool.remove(i);
+        }
+
+        this.conPool = null;
+
+    }
 }
