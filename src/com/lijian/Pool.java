@@ -37,7 +37,7 @@ public class Pool {
         }
     }
     private void createPool() throws SQLException, ClassNotFoundException, IllegalAccessException, InstantiationException {
-        if (this.conPool != nil) {
+        if (this.conPool != null) {
             return;
         }
         // 驱动器实例化
@@ -49,7 +49,7 @@ public class Pool {
     }
     private void createConns(int increSize) throws SQLException {
         if (this.conPool == null) {
-            this.conPool = new Vector<DbCon>();
+            this.conPool = new Vector<>();
         }
         for (int i=1; i<= increSize; i++){
             if (this.capacity < this.conPool.size() + 1){
@@ -58,11 +58,10 @@ public class Pool {
             Connection con = DriverManager.getConnection(this.dbUrl, this.dbUname, this.dbPass);
             this.conPool.addElement(new DbCon(con));
         }
-        return;
     }
 
     public synchronized Connection getConnection() throws SQLException {
-        DbCon c;
+        DbCon c = null;
         try{
             c = findFreeConn();
         } catch (SQLException e) {
@@ -73,14 +72,14 @@ public class Pool {
             c = findFreeConn();
         }
 
-        return !c ? c.getConn() : null;
+        return (c == null) ? c.getConn() : null;
     }
 
     private DbCon findFreeConn() throws SQLException {
         if (this.conPool == null) {
             return null;
         }
-        for (i = 0; i < this.conPool.size(); i++){
+        for (int i = 0; i < this.conPool.size(); i++){
             DbCon con = this.conPool.get(i);
             if (con.getBusy()) {
                 continue;
@@ -99,5 +98,19 @@ public class Pool {
             return con;
         }
         return null;
+    }
+
+    public synchronized void PutConn(Connection con ) throws  SQLException{
+        if ( this.conPool  == null) {
+            if (con != null) con.close();
+        }
+
+        for (int i=0; i< this.conPool.size(); i++){
+            DbCon  c  = this.conPool.get(i);
+            if (c.getConn() == con) {
+                c.setBusy(false);
+                break;
+            }
+        }
     }
 }
