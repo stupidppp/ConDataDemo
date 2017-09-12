@@ -52,7 +52,7 @@ public class Pool {
             this.conPool = new Vector<>();
         }
         for (int i=1; i<= increSize; i++){
-            if (this.capacity < this.conPool.size() + 1){
+            if (this.capacity <= this.conPool.size() ){
                 return;
             }
             Connection con = DriverManager.getConnection(this.dbUrl, this.dbUname, this.dbPass);
@@ -67,7 +67,7 @@ public class Pool {
             c = findFreeConn();
         }
 
-        return (c == null) ? c.getConn() : null;
+        return (c != null) ? c.getConn() : null;
     }
 
     private DbCon findFreeConn() throws SQLException {
