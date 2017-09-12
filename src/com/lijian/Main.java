@@ -25,6 +25,13 @@ public class  Main {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        // 关闭连接池
+        try {
+            pool.cleanConPool();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     static class Db_job implements Runnable {
