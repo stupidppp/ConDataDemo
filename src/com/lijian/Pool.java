@@ -56,6 +56,7 @@ public class Pool {
                 return;
             }
             Connection con = DriverManager.getConnection(this.dbUrl, this.dbUname, this.dbPass);
+            con.setAutoCommit(false);
             this.conPool.addElement(new DbCon(con));
         }
     }
@@ -66,7 +67,6 @@ public class Pool {
             this.createConns(this.increment);
             c = findFreeConn();
         }
-
         return (c != null) ? c.getConn() : null;
     }
 
@@ -84,6 +84,7 @@ public class Pool {
                 con.setConn(null);
 
                 Connection c = DriverManager.getConnection(this.dbUrl, this.dbUname, this.dbPass);
+                c.setAutoCommit(false);
                 con.setConn(c);
                 con.setBusy(true);
                 con.setTimeUsed(LocalDateTime.now());
@@ -121,7 +122,6 @@ public class Pool {
         }
 
         this.conPool = null;
-
     }
 
 }
