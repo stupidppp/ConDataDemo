@@ -61,12 +61,7 @@ public class Pool {
     }
 
     public synchronized Connection getConnection() throws SQLException {
-        DbCon c = null;
-        try{
-            c = findFreeConn();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        DbCon c = findFreeConn();
         if (c == null) {
             this.createConns(this.increment);
             c = findFreeConn();
@@ -128,4 +123,5 @@ public class Pool {
         this.conPool = null;
 
     }
+
 }
